@@ -1,0 +1,52 @@
+  function SendIt() {
+  DocumentApp.getUi() // Or DocumentApp or SlidesApp or FormApp.
+      .createMenu('Custom Menu')
+      .addItem('SendTableFunc', 'SendTableFunc')
+      .addToUi();
+}
+
+function SendTableFunc() {
+  var ui = DocumentApp.getUi(); // Same variations.
+
+  var result = ui.prompt(
+      'Please Choose The Table.',
+    'Please enter the table number: (i.e 1, 2, 3, etc.)',
+      ui.ButtonSet.OK_CANCEL);
+
+  // Process the user's response.
+  var button = result.getSelectedButton();
+  var text = result.getResponseText();
+  if (button == ui.Button.OK) {
+    // User clicked "OK".
+    ui.alert('The table sent is: ' + text + '.');
+  } else if (button == ui.Button.CANCEL) {
+    // User clicked "Cancel".
+    ui.alert('I didn\'t get the table.');
+  } else if (button == ui.Button.CLOSE) {
+    // User clicked X in the title bar.
+    ui.alert('You closed the dialog.');
+  }
+
+  
+  //Get's table
+	var doc = DocumentApp.getActiveDocument();
+	var body = doc.getBody();
+  
+	var tables = body.getTables();
+	var numRows = tables[text].getNumRows();
+
+	var row;
+	var Email;
+    var Name;
+    var Message;
+  //Gets Table's Rows
+	for(row = 1; row<numRows-1; row++) {
+		Email = tables[text].getCell(row, 0).getText();
+        Name = tables[text].getCell(row, 1).getText();
+        Message = tables[text].getCell(row, 2).getText();
+      //Sends Email
+      MailApp.sendEmail(Email, Name, Message); 
+		}
+	}
+
+
